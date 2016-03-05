@@ -14,10 +14,14 @@
    presets: ['es2015']
  });
  require('babel-polyfill');
- 
+
 module.exports.bootstrap = function(cb) {
+
+  if(sails.config.models.migrate === 'drop'){
+    Counter.create({})
+    .then(()=> cb(), console.trace);
+  }
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
 };

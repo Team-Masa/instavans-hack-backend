@@ -15,7 +15,8 @@ module.exports = {
     },
 
     porters: {
-      type: 'json'
+      type: 'json',
+      defaultsTo : []
     },
 
     location: {
