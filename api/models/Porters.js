@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Porters.js
  *
@@ -14,5 +15,13 @@ module.exports = {
     name : {
       type : 'text'
     }
+  },
+
+  beforeCreate : (values, cb) => {
+    Counter.incrementCounter('porters')
+    .then(counters => {
+      values.porterId = counters.value.porters || 0;
+      cb();
+    }, console.trace);
   }
 };
