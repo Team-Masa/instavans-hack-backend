@@ -37,6 +37,8 @@ module.exports.routes = {
   },
 
   'post /assign-porter-to-job' : 'PortersController.assignToJob',
+  'post /porter-start' : 'PortersController.startJob',
+  'post /porter-end' : 'PortersController.endJob',
 
   /***************************************************************************
   *                                                                          *

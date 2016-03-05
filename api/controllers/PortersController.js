@@ -5,6 +5,36 @@
  * @description :: Server-side logic for managing porters
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+import {findIndex} from 'lodash';
+
+const modifyPorterTime = type => (req, res) => {
+  let { porterId, jobId } = req.body;
+
+  porterId = Number(porterId);
+  jobId = Number(jobId);
+
+  Jobs.findOne({
+    jobId
+  }).then(job => {
+    const porterIndex = findIndex(job.porters, porter => porter.porterId === porterId);
+
+    if(porterIndex < 0){
+      res.status(500).send({
+        error : 'Porter not found'
+      });
+    }
+
+    job.porters[porterIndex][type] = new Date();
+
+    job.save(err => {
+      if (err) {
+        console.trace(err);
+      }
+      res.json(job);
+    });
+
+  }, console.trace);
+};
 
 module.exports = {
 
@@ -38,5 +68,9 @@ module.exports = {
         });
 
       });
-  }
+  },
+
+
+  startJob : modifyPorterTime('startTime'),
+  endJob : modifyPorterTime('endTime'),
 };
