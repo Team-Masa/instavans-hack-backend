@@ -33,5 +33,13 @@ module.exports = {
     portersRequired: {
       type: 'integer'
     }
+  },
+
+  beforeCreate : (values, cb) => {
+    Counter.incrementCounter('jobs')
+    .then(counters => {
+      values.jobId = counters.value.jobs || 0;
+      cb();
+    }, console.trace);
   }
 };
