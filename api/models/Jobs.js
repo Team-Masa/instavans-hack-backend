@@ -33,16 +33,5 @@ module.exports = {
     portersRequired: {
       type: 'integer'
     }
-  },
-
-  incrementCounter: () => {
-    return Counter.native((err, counter) => {
-      console.log(err);
-      counter.findAndModify({}, [], {
-        '$inc': {
-          'counter1': 1
-        }
-      });
-    });
   }
 };
