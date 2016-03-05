@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Jobs.js
  *
@@ -8,29 +9,40 @@
 module.exports = {
 
   attributes: {
-    jobId : {
-      type : 'integer',
-      autoIncrement : true
+    jobId: {
+      type: 'integer',
+      autoIncrement: true
     },
 
-    porters : {
-      type :'json'
+    porters: {
+      type: 'json'
     },
 
-    location : {
-      type : 'json'
+    location: {
+      type: 'json'
     },
 
-    paymentPerPorter : {
-      type : 'integer'
+    paymentPerPorter: {
+      type: 'integer'
     },
 
-    time : {
-      type : 'datetime'
+    time: {
+      type: 'datetime'
     },
 
-    portersRequired : {
-      type :'integer'
+    portersRequired: {
+      type: 'integer'
     }
+  },
+
+  incrementCounter: () => {
+    return Counter.native((err, counter) => {
+      console.log(err);
+      counter.findAndModify({}, [], {
+        '$inc': {
+          'counter1': 1
+        }
+      });
+    });
   }
 };
