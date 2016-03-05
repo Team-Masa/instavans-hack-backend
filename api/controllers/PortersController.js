@@ -6,6 +6,8 @@
  */
 
 module.exports = {
-	
-};
 
+		assignToJob : (req, res) => {
+			
+		}
+};
