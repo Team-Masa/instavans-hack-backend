@@ -32,7 +32,8 @@ module.exports = {
     },
 
     portersRequired: {
-      type: 'integer'
+      type: 'integer',
+      defaultsTo : 1
     }
   },
 
@@ -40,6 +41,14 @@ module.exports = {
     Counter.incrementCounter('jobs')
     .then(counters => {
       values.jobId = counters.value.jobs || 0;
+      cb();
+    }, console.trace);
+  },
+
+  afterUpdate : (values, cb) => {
+    Jobs.find({})
+    .then(jobs => {
+      sails.io.sockets.emit('job-update', jobs);
       cb();
     }, console.trace);
   }
