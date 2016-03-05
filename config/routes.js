@@ -40,6 +40,8 @@ module.exports.routes = {
   'post /porter-start' : 'PortersController.startJob',
   'post /porter-end' : 'PortersController.endJob',
 
+  'get /subscribe-to-jobs' : 'JobsController.addListener',
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
