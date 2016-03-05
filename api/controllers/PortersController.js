@@ -16,10 +16,16 @@ const modifyPorterTime = type => (req, res) => {
   Jobs.findOne({
     jobId
   }).then(job => {
+    if(!job){
+      return res.status(500).send({
+        error : 'Job not found'
+      });
+    }
+
     const porterIndex = findIndex(job.porters, porter => porter.porterId === porterId);
 
     if(porterIndex < 0){
-      res.status(500).send({
+      return res.status(500).send({
         error : 'Porter not found'
       });
     }

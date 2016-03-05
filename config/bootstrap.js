@@ -21,6 +21,9 @@ module.exports.bootstrap = function(cb) {
     Counter.create({})
     .then(()=> cb(), console.trace);
   }
+  else{
+    cb();
+  }
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
