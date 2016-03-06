@@ -5,10 +5,17 @@
  * @description :: Server-side logic for managing porters
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-import {findIndex} from 'lodash';
+import {
+  findIndex
+} from 'lodash';
+import moment from 'moment';
+import latlngToKm from './extra/latlng-to-km';
 
 const modifyPorterTime = type => (req, res) => {
-  let { porterId, jobId } = req.body;
+  let {
+    porterId,
+    jobId
+  } = req.body;
 
   porterId = Number(porterId);
   jobId = Number(jobId);
@@ -16,17 +23,17 @@ const modifyPorterTime = type => (req, res) => {
   Jobs.findOne({
     jobId
   }).then(job => {
-    if(!job){
+    if (!job) {
       return res.status(500).send({
-        error : 'Job not found'
+        error: 'Job not found'
       });
     }
 
     const porterIndex = findIndex(job.porters, porter => porter.porterId === porterId);
 
-    if(porterIndex < 0){
+    if (porterIndex < 0) {
       return res.status(500).send({
-        error : 'Porter not found'
+        error: 'Porter not found'
       });
     }
 
@@ -42,7 +49,23 @@ const modifyPorterTime = type => (req, res) => {
   }, console.trace);
 };
 
+const transformData = (lat, lng) => job => {
+  job.prettyDate = moment(job.time).format('MMMM DD YYYY hh:mm a');
+  job.distance = Math.round(latlngToKm(lat, lng, job.location.lat, job.location.lng) * 100) / 100;
+  return job;
+};
+
 module.exports = {
+
+  getUnassignedJobs : (req, res) => {
+    const {lat, lng} = req.query;
+    Jobs.find({
+      allAssigned : {
+        '!' : true
+      }
+    })
+    .then(data => res.json(data.map(transformData(lat, lng))), console.trace);
+  },
 
   assignToJob: (req, res) => {
     let {
@@ -50,8 +73,8 @@ module.exports = {
       jobId
     } = req.body;
 
-		porterId = Number(porterId);
-		jobId = Number(jobId);
+    porterId = Number(porterId);
+    jobId = Number(jobId);
 
     Jobs.findOne({
         jobId
@@ -66,6 +89,7 @@ module.exports = {
           porterId
         });
 
+        job.allAssigned = (job.porters.length >= job.portersRequired);
         job.save(err => {
           if (err) {
             console.trace(err);
@@ -77,6 +101,6 @@ module.exports = {
   },
 
 
-  startJob : modifyPorterTime('startTime'),
-  endJob : modifyPorterTime('endTime'),
+  startJob: modifyPorterTime('startTime'),
+  endJob: modifyPorterTime('endTime'),
 };

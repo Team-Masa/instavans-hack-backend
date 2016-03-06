@@ -41,6 +41,7 @@ module.exports.routes = {
   'post /porter-end' : 'PortersController.endJob',
 
   'get /subscribe-to-jobs' : 'JobsController.addListener',
+  'get /unassigned-jobs' : 'PortersController.getUnassignedJobs',
 
   /***************************************************************************
   *                                                                          *
