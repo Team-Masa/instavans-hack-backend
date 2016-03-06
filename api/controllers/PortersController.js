@@ -6,7 +6,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 import {
-  findIndex
+  findIndex,
+  sortBy
 } from 'lodash';
 import moment from 'moment';
 import latlngToKm from './extra/latlng-to-km';
@@ -73,7 +74,7 @@ module.exports = {
           '!': true
         }
       })
-      .then(data => res.json(data.map(transformData(lat, lng))), console.trace);
+      .then(data => res.json(sortBy(data.map(transformData(lat, lng)), 'distance')), console.trace);
   },
 
   assignToJob: (req, res) => {
