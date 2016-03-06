@@ -57,14 +57,23 @@ const transformData = (lat, lng) => job => {
 
 module.exports = {
 
-  getUnassignedJobs : (req, res) => {
-    const {lat, lng} = req.query;
+  getUnassignedJobs: (req, res) => {
+    let {
+      lat,
+      lng,
+      porterId
+    } = req.query;
+
+    porterId = Number(porterId) || -1;
     Jobs.find({
-      allAssigned : {
-        '!' : true
-      }
-    })
-    .then(data => res.json(data.map(transformData(lat, lng))), console.trace);
+        'porters.porterId': {
+          '!': porterId
+        },
+        allAssigned: {
+          '!': true
+        }
+      })
+      .then(data => res.json(data.map(transformData(lat, lng))), console.trace);
   },
 
   assignToJob: (req, res) => {
