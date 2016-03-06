@@ -79,11 +79,15 @@ module.exports = {
   assignToJob: (req, res) => {
     let {
       porterId,
-      jobId
+      jobId,
+      distance
     } = req.body;
 
     porterId = Number(porterId);
     jobId = Number(jobId);
+    distance = Number(distance);
+
+    const timeTaken = distance / 15 ;
 
     Jobs.findOne({
         jobId
@@ -95,7 +99,8 @@ module.exports = {
         }
 
         job.porters.push({
-          porterId
+          porterId,
+          eta : timeTaken ? moment().add(timeTaken, 'hours').format('MM/DD hh:mm a') : null
         });
 
         job.allAssigned = (job.porters.length >= job.portersRequired);
